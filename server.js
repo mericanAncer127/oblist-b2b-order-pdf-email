@@ -1,6 +1,8 @@
 "use strict";
 
 const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
 
 const proxyRoutes = require("./routes/invoice");
 
@@ -12,6 +14,8 @@ async function start() {
   // Seed the database
   // App
   const app = express();
+  app.use(cors())
+  app.use(cookieParser())
 
   // Health check
   app.get("/health", (req, res) => {
