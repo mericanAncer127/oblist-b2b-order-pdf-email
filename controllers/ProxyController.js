@@ -17,6 +17,10 @@ exports.createInvoice = async (req, res) => {
     );
 
     console.log(response);
+    if(response.status == 422)
+    {
+      return res.json({ message : "Already created"});
+    }
 
     res.json(response.data);
   } catch (error) {
