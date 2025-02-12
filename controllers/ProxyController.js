@@ -1,28 +1,26 @@
+const axios = require("axios");
 exports.createInvoice = async (req, res) => {
-  const payload = req.body;
+  const { payload } = req.body;
 
+  console.log("req body: ", req.body);
+  console.log("payload: ", payload);
   try {
-    const response = await fetch(
+    const response = await axios.post(
       "https://app.pennylane.com/api/external/v1/customer_invoices",
+      payload,
       {
-        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer aB8EZbbvL9epFcxeVdQsp2xwfyfTFCVsrIQtTkkUj-U`,
+          Authorization: "Bearer aB8EZbbvL9epFcxeVdQsp2xwfyfTFCVsrIQtTkkUj-U",
         },
-        body: JSON.stringify(payload),
       }
     );
 
     console.log(response);
 
-    if (!response.ok) {
-      throw new Error("Failed to create invoice");
-    }
-
-    const data = await response.json();
-    res.json(data); // Send data back to Shopify extension
+    res.json(response.data);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Failed to create invoice" });
   }
 };
