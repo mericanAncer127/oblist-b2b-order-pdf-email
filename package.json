@@ -1,16 +1,16 @@
 {
-  "name": "actifai-engineering-takehome-app",
+  "name": "pennylane-create-invoice-proxy-app",
   "version": "2",
   "builds": [
     {
-      "src": "index.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "index.js"
+      "dest": "server.js"
     }
   ],
   "description": "Node server for the Actifai Engineering takehome test.",
