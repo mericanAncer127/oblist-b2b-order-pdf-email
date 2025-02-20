@@ -1,6 +1,18 @@
 {
   "name": "actifai-engineering-takehome-app",
-  "version": "1.0.0",
+  "version": "2",
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ],
   "description": "Node server for the Actifai Engineering takehome test.",
   "author": "Actifai Engineering",
   "main": "server.js",
