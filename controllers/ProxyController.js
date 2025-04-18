@@ -33,13 +33,16 @@ const CreatePDF_Upload2GoogleDrive = async (products) => {
 
   console.log('✅ PDF uploaded to Google Drive:');
   console.log(uploadedFile.webViewLink);
+
+  return uploadedFile.webViewLink;
 }
 
 const CreatePDf_TriggerKlaviyo = async (req, res) => {
   const { email, products } = req.body;
 
   try {
-    CreatePDF_Upload2GoogleDrive(products);
+    const link = await CreatePDF_Upload2GoogleDrive(products);
+    res.status(200).json({msg: "succeed", link: link});
     // Send the POST request to the external API (PennyLane)
   } catch (error) {
     // Handle errors more specifically:

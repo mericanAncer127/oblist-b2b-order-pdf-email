@@ -28,5 +28,7 @@ app.get("/health", (req, res) => {
 app.use("/api/order", proxyRoutes); // User-Group routes
 
 // Export the Express app instance
+app.listen(PORT, HOST);
+console.log(`Server is running on http://${HOST}:${PORT}`);
 
 module.exports = app;
