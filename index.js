@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-const proxyRoutes = require("./routes/invoice");
+const proxyRoutes = require("./routes/order");
 
 // Constants
 const PORT = 3000;
@@ -24,7 +24,8 @@ app.get("/health", (req, res) => {
 // Write your endpoints here
 
 // Register routes
-app.use("/api/invoice", proxyRoutes); // User-Group routes
+// app.use("/api/invoice", proxyRoutes); // User-Group routes
+app.use("/api/order", proxyRoutes); // User-Group routes
 
 // Export the Express app instance
 

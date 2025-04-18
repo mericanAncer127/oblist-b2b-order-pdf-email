@@ -1,34 +1,46 @@
 const axios = require("axios");
+const env = require("dotenv");
+const { generatePdf, uploadToDrive } = require('../config/utils');
+const { google } = require('googleapis');
 
-exports.createInvoice = async (req, res) => {
-  const { payload } = req.body;
+env.config();
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDRIECT_URI = process.env.REDRIECT_URI;
+
+const ACCESS_TOKEN = process.env.ACCESS_TOKEN;
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
+const EXPIAY_DATE = process.env.EXPIAY_DATE;
+
+const CreatePDF_Upload2GoogleDrive = async (products) => {
+  const oAuth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REDRIECT_URI
+  );
+
+  // Set credentials from previous OAuth flow
+  oAuth2Client.setCredentials({
+    access_token: ACCESS_TOKEN,
+    refresh_token: REFRESH_TOKEN,
+    token_type: 'Bearer',
+    expiry_date: EXPIAY_DATE,
+  });
+
+  const pdf = await generatePdf({ name: 'John Doe' });
+  const uploadedFile = await uploadToDrive(oAuth2Client, pdf);
+
+  console.log('✅ PDF uploaded to Google Drive:');
+  console.log(uploadedFile.webViewLink);
+}
+
+const CreatePDf_TriggerKlaviyo = async (req, res) => {
+  const { email, products } = req.body;
 
   try {
+    CreatePDF_Upload2GoogleDrive(products);
     // Send the POST request to the external API (PennyLane)
-    const response = await axios.post(
-      "https://app.pennylane.com/api/external/v1/customer_invoices",
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer aB8EZbbvL9epFcxeVdQsp2xwfyfTFCVsrIQtTkkUj-U",
-        },
-      }
-    );
-
-    // Check if the response status is 422 (Unprocessable Entity)
-    if (response.status === 422) {
-      console.log("Invoice already created: ", response.data);
-      return res.status(422).json({
-        message: "Invoice already created", // Return a specific message for 422
-      });
-    }
-
-    // Log the response data for debugging purposes
-    console.log("Invoice created successfully:", response.data);
-
-    // Return the created invoice data back to the client
-    res.json(response.data);
   } catch (error) {
     // Handle errors more specifically:
     if (error.response) {
@@ -50,3 +62,5 @@ exports.createInvoice = async (req, res) => {
     }
   }
 };
+
+module.exports = { CreatePDf_TriggerKlaviyo, CreatePDF_Upload2GoogleDrive };
